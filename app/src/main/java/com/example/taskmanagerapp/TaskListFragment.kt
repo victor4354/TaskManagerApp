@@ -34,3 +34,4 @@ class TaskListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+}
