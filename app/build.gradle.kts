@@ -56,4 +56,13 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    // Navigation Component
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+
+    // Lottie para animaciones
+    implementation("com.airbnb.android:lottie:6.1.0")
+
+    // Material Design
+    implementation("com.google.android.material:material:1.11.0")
 }
