@@ -1,40 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
     app:startDestination="@id/loginFragment">
 
+    <!-- Autenticación -->
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.taskmanagerapp.LoginFragment"
-        android:label="Iniciar Sesión"
+        android:name="com.example.taskmanagerapp.ui.fragments.LoginFragment"
         tools:layout="@layout/fragment_login">
+
         <action
-            android:id="@+id/action_loginFragment_to_registerFragment"
+            android:id="@+id/action_login_to_register"
             app:destination="@id/registerFragment" />
+
         <action
-            android:id="@+id/action_loginFragment_to_taskListFragment"
-            app:destination="@id/taskListFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_login_to_taskList"
+            app:destination="@id/taskListFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.taskmanagerapp.RegisterFragment"
-        android:label="Registrarse"
-        tools:layout="@layout/fragment_register">
+        android:name="com.example.taskmanagerapp.ui.fragments.RegisterFragment"
+        tools:layout="@layout/fragment_register" />
+
+    <!-- Funcionalidad principal -->
+    <fragment
+        android:id="@+id/taskListFragment"
+        android:name="com.example.taskmanagerapp.ui.fragments.TaskListFragment"
+        tools:layout="@layout/fragment_task_list">
+
         <action
-            android:id="@+id/action_registerFragment_to_taskListFragment"
-            app:destination="@id/taskListFragment"
-            app:popUpTo="@id/loginFragment"
-            app:popUpToInclusive="true" />
+            android:id="@+id/action_taskList_to_taskDetail"
+            app:destination="@id/taskDetailFragment" />
+
+        <action
+            android:id="@+id/action_taskList_to_addTask"
+            app:destination="@id/addTaskFragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/taskListFragment"
-        android:name="com.example.taskmanagerapp.TaskListFragment"
-        android:label="Lista de Tareas"
-        tools:layout="@layout/fragment_task_list" />
+        android:id="@+id/taskDetailFragment"
+        android:name="com.example.taskmanagerapp.ui.fragments.TaskDetailFragment"
+        tools:layout="@layout/fragment_task_detail" />
+
+    <fragment
+        android:id="@+id/addTaskFragment"
+        android:name="com.example.taskmanagerapp.ui.fragments.AddTaskFragment"
+        tools:layout="@layout/fragment_add_task" />
+
 </navigation>

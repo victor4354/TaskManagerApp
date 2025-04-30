@@ -1,21 +1,23 @@
-package com.example.taskmanagerapp
+package com.yourdomain.tasklist.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.taskmanagerapp.databinding.FragmentRegisterBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.yourdomain.tasklist.R  // Added missing R import
+import com.yourdomain.tasklist.databinding.FragmentRegisterBinding
+import com.yourdomain.tasklist.ui.communicator.FragmentCommunicator
+import com.yourdomain.tasklist.ui.viewmodels.RegisterViewModel
 
 class RegisterFragment : Fragment() {
-
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: RegisterViewModel by viewModels()
+    private lateinit var communicator: FragmentCommunicator
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,57 +29,30 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        communicator = activity as FragmentCommunicator
 
-        // Configure register button
         binding.btnRegister.setOnClickListener {
-            if (validateFields()) {
-                // Show loading animation
-                showLoading(true)
-
-                // Simulate registration process
-                CoroutineScope(Dispatchers.Main).launch {
-                    delay(2000) // Simulating network delay
-                    showLoading(false)
-                    findNavController().navigate(R.id.action_registerFragment_to_taskListFragment)
-                }
+            val name = binding.etName.text.toString().trim()
+            val email = binding.etEmail.text.toString().trim()
+            val pass = binding.etPassword.text.toString().trim()
+            if (name.isBlank() || email.isBlank() || pass.isBlank()) {
+                if (name.isBlank()) binding.tilName.error = getString(R.string.empty_field_error)
+                if (email.isBlank()) binding.tilEmail.error = getString(R.string.empty_field_error)
+                if (pass.isBlank()) binding.tilPassword.error = getString(R.string.empty_field_error)
+            } else {
+                viewModel.register(name, email, pass)
             }
         }
-    }
-
-    private fun validateFields(): Boolean {
-        val name = binding.etName.text.toString().trim()
-        val email = binding.etEmail.text.toString().trim()
-        val password = binding.etPassword.text.toString().trim()
-
-        if (name.isEmpty()) {
-            binding.tilName.error = "El nombre es obligatorio"
-            return false
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            if (it) communicator.showLoader() else communicator.hideLoader()
         }
-
-        if (email.isEmpty()) {
-            binding.tilEmail.error = "El correo es obligatorio"
-            return false
-        }
-
-        if (password.isEmpty()) {
-            binding.tilPassword.error = "La contraseña es obligatoria"
-            return false
-        }
-
-        // Clear errors
-        binding.tilName.error = null
-        binding.tilEmail.error = null
-        binding.tilPassword.error = null
-        return true
-    }
-
-    private fun showLoading(show: Boolean) {
-        if (show) {
-            binding.loadingAnimation.visibility = View.VISIBLE
-            binding.btnRegister.isEnabled = false
-        } else {
-            binding.loadingAnimation.visibility = View.GONE
-            binding.btnRegister.isEnabled = true
+        viewModel.registerResult.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                Toast.makeText(context, R.string.register_success, Toast.LENGTH_SHORT).show()
+                findNavController().navigateUp()
+            } else {
+                Toast.makeText(context, R.string.register_error, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

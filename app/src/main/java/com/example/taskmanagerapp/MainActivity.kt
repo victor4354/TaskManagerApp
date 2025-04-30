@@ -1,27 +1,30 @@
-package com.example.taskmanagerapp
+package com.yourdomain.tasklist
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
+import android.view.View
+import androidx.appcompat.app.AppCompatActivity
+import com.airbnb.lottie.LottieAnimationView                    // ← import Lottie
+import com.yourdomain.tasklist.databinding.ActivityMainBinding
+import com.yourdomain.tasklist.ui.communicator.FragmentCommunicator
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), FragmentCommunicator {
 
-    private lateinit var navController: NavController
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.navController
-
-        setupActionBarWithNavController(navController)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
+    override fun showLoader() {
+        binding.loaderLayout.visibility = View.VISIBLE
+        binding.loaderAnimation.playAnimation()
+    }
+
+    override fun hideLoader() {
+        binding.loaderAnimation.pauseAnimation()
+        binding.loaderLayout.visibility = View.GONE
     }
 }
+

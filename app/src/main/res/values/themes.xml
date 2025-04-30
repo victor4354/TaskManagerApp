@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="Theme.TaskManagerApp" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Tema principal de Material 3 -->
+    <style name="Theme.TaskListApp" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/md_primary</item>
+        <item name="colorOnPrimary">@color/md_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_primaryContainer</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 </resources>

@@ -1,21 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TaskManagerApp</string>
-    <!-- Strings para login -->
-    <string name="welcome">¡Bienvenido!</string>
-    <string name="login_subtitle">Inicia sesión para continuar</string>
-    <string name="email_hint">Correo:</string>
-    <string name="password_hint">Contraseña:</string>
-    <string name="login_button">Ingresar</string>
-    <string name="register_text">Registrarse</string>
+    <string name="app_name">TaskListApp</string>
+
+    <!-- Login & Register Strings -->
+    <string name="welcome">Bienvenido!</string>
+    <string name="login_to_continue">Inicia sesión para continuar</string>
+    <string name="register_to_continue">Registrate para continuar</string>
+    <string name="email">Correo:</string>
+    <string name="password">Contraseña:</string>
+    <string name="name">Nombre:</string>
+    <string name="login">Ingresar</string>
+    <string name="register">Registrarse</string>
     <string name="reset_password">Restablecer contraseña</string>
+    <string name="app_icon">Icono de su preferencia</string>
+    <string name="color_preference">Color de su preferencia</string>
+    <string name="empty_field_error">Este campo no puede estar vacío</string>
+    <string name="login_success">¡Inicio de sesión exitoso!</string>
+    <string name="login_error">Error al iniciar sesión</string>
+    <string name="register_success">¡Registro exitoso! Ahora puede iniciar sesión</string>
+    <string name="register_error">Error al registrarse</string>
 
-    <!-- Strings para registro -->
-    <string name="register_subtitle">Registrate para continuar</string>
-    <string name="name_hint">Nombre:</string>
-    <string name="register_button">Registrar</string>
-
-    <!-- Strings para lista de tareas -->
-    <string name="tasks_title">Mis Tareas</string>
-    <string name="add_task_not_implemented">Función para añadir tarea no implementada</string>
+    <!-- Añadido: String para el FAB -->
+    <string name="add_task">Agregar tarea</string>
 </resources>

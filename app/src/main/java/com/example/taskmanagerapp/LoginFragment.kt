@@ -1,22 +1,25 @@
-package com.example.taskmanagerapp
+package com.yourdomain.tasklist.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.example.taskmanagerapp.databinding.FragmentLoginBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.yourdomain.tasklist.R                           // ← make sure this is present
+import com.yourdomain.tasklist.databinding.FragmentLoginBinding
+import com.yourdomain.tasklist.ui.ListActivity
+import com.yourdomain.tasklist.ui.communicator.FragmentCommunicator
+import com.yourdomain.tasklist.ui.viewmodels.LoginViewModel
 
 class LoginFragment : Fragment() {
-
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: LoginViewModel by viewModels()
+    private lateinit var communicator: FragmentCommunicator
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,60 +31,33 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        communicator = activity as FragmentCommunicator
 
-        // Configure login button
         binding.btnLogin.setOnClickListener {
-            if (validateFields()) {
-                // Show loading animation
-                showLoading(true)
-
-                // Simulate login process
-                CoroutineScope(Dispatchers.Main).launch {
-                    delay(2000) // Simulating network delay
-                    showLoading(false)
-                    findNavController().navigate(R.id.action_loginFragment_to_taskListFragment)
-                }
+            val email = binding.etEmail.text.toString().trim()
+            val pass = binding.etPassword.text.toString().trim()
+            if (email.isBlank() || pass.isBlank()) {
+                if (email.isBlank()) binding.tilEmail.error = getString(R.string.empty_field_error)
+                if (pass.isBlank()) binding.tilPassword.error = getString(R.string.empty_field_error)
+            } else {
+                viewModel.login(email, pass)
             }
         }
-
-        // Configure register text
         binding.tvRegister.setOnClickListener {
-            findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
+            findNavController().navigate(R.id.action_login_to_register)
         }
 
-        // Configure reset password text
-        binding.tvResetPassword.setOnClickListener {
-            Toast.makeText(context, "Función no implementada", Toast.LENGTH_SHORT).show()
+        viewModel.isLoading.observe(viewLifecycleOwner) {
+            if (it) communicator.showLoader() else communicator.hideLoader()
         }
-    }
-
-    private fun validateFields(): Boolean {
-        val email = binding.etEmail.text.toString().trim()
-        val password = binding.etPassword.text.toString().trim()
-
-        if (email.isEmpty()) {
-            binding.tilEmail.error = "El correo es obligatorio"
-            return false
-        }
-
-        if (password.isEmpty()) {
-            binding.tilPassword.error = "La contraseña es obligatoria"
-            return false
-        }
-
-        // Clear errors
-        binding.tilEmail.error = null
-        binding.tilPassword.error = null
-        return true
-    }
-
-    private fun showLoading(show: Boolean) {
-        if (show) {
-            binding.loadingAnimation.visibility = View.VISIBLE
-            binding.btnLogin.isEnabled = false
-        } else {
-            binding.loadingAnimation.visibility = View.GONE
-            binding.btnLogin.isEnabled = true
+        viewModel.loginResult.observe(viewLifecycleOwner) { success ->
+            if (success) {
+                Toast.makeText(context, R.string.login_success, Toast.LENGTH_SHORT).show()
+                startActivity(Intent(requireContext(), ListActivity::class.java))
+                activity?.finish()
+            } else {
+                Toast.makeText(context, R.string.login_error, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
